@@ -1,6 +1,18 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "repository": "https://github.com/linksulinternet-code/easycups",
-  "download": "downloads/easycups-1.1.0.tar.gz",
-  "sha256": "c66bc0fdee6a7a8ba50a135d3d3546c76aaf62842e4791d21029213881b4a40d"
+  "artifacts": {
+    ".run": {
+      "file": "downloads/EasyCUPS-1.2.0.run",
+      "sha256": "33920a9e49f0a9d946c26e3f11417e5090ae62ed3bc2cf93eea70caac60da6e6"
+    },
+    ".deb": {
+      "file": "downloads/easycups_1.2.0_all.deb",
+      "sha256": "c90fe1bcb01f332f0271e2bd7bf23ec1290260eff752eea15fa3299747fe070c"
+    },
+    ".gz": {
+      "file": "downloads/easycups-1.2.0.tar.gz",
+      "sha256": "0d8e822bab38f9e16c327b8394f997c1dc372e7d5cf30d42c765f70ec53c9d1e"
+    }
+  }
 }

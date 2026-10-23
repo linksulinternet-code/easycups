@@ -107,6 +107,9 @@ class Win(Adw.ApplicationWindow):
     # ---------- impressoras ----------
     def p_printers(s):
         pg = Adw.PreferencesPage()
+        welcome = Adw.PreferencesGroup(title="Comece por aqui", description="Conecte por USB ou use a mesma rede Wi-Fi da impressora.")
+        s.row(welcome, "Instalar minha impressora", "Vamos procurar dispositivos conectados ao computador e à rede.", "Procurar minha impressora", lambda: (s.stack.set_visible_child_name("add"), s.scan()))
+        pg.add(welcome)
         s.pgrp = Adw.PreferencesGroup(title="Suas impressoras", description="Clique numa impressora para ver as opções")
         s.refresh_btn(s.pgrp, s.refresh); pg.add(s.pgrp); s.refresh(); return pg
 
@@ -137,13 +140,13 @@ class Win(Adw.ApplicationWindow):
         if not s.prow:
             none = "No destinations" in o or not o
             r0 = Adw.ActionRow(title="Nenhuma impressora ainda" if none else "Não consegui ler as impressoras",
-                               subtitle="Vá na aba Adicionar" if none else "Veja a aba Serviço")
+                               subtitle="Ligue sua impressora e clique em Procurar minha impressora acima." if none else "Abra Serviço para verificar a impressão.")
             s.pgrp.add(r0); s.prow.append(r0)
 
     # ---------- adicionar ----------
     def p_add(s):
         pg = Adw.PreferencesPage()
-        s.dg = Adw.PreferencesGroup(title="Adicionar impressora", description="Ligue a impressora e clique em Procurar")
+        s.dg = Adw.PreferencesGroup(title="Adicionar impressora", description="Ligue a impressora. Se ela usa Wi-Fi, conecte este computador à mesma rede.")
         s.row(s.dg, "Procurar impressoras", "USB e rede (pode levar alguns segundos)", "Procurar", s.scan)
         s.row(s.dg, "Adicionar por endereço", "Ex.: ipp://192.168.0.10/ipp/print ou socket://IP:9100", "Digitar…",
               lambda: s.ask("Endereço da impressora", "ipp://", s.add))
@@ -169,8 +172,10 @@ class Win(Adw.ApplicationWindow):
     def add2(s, uri, taken):
         name = uniq(re.sub(r"[^A-Za-z0-9_]", "_", uri.split("://", 1)[-1].split("?")[0])[:30].strip("_") or "Impressora", taken)
         d = Adw.AlertDialog(heading="Como instalar o driver?",
-                            body="Automático funciona na maioria das impressoras modernas. Se falhar, tente de novo com um PPD.")
+                            body="Para impressoras modernas com IPP, escolha Automático. Modelos antigos ou USB podem precisar de um driver do fabricante (arquivo PPD).")
         for k, t in (("x", "Cancelar"), ("auto", "Automático"), ("ppd", "Escolher PPD…")): d.add_response(k, t)
+        if not uri.startswith(("ipp://", "ipps://")):
+            d.set_response_enabled("auto", False)
         d.set_response_appearance("auto", Adw.ResponseAppearance.SUGGESTED); d.set_close_response("x")
         base = ["lpadmin", "-p", name, "-E", "-v", uri, "-o", "printer-is-shared=false"]   # FM15: não compartilha por padrão
         def r(_, k):
@@ -207,7 +212,7 @@ class Win(Adw.ApplicationWindow):
         s.st = Adw.ActionRow(title="Estado", subtitle="verificando…"); g.add(s.st)
         S = lambda a, m: (lambda: s.do(svc(a), m, s.status))
         s.row(g, "Instalar CUPS", "Instala e ativa tudo o que é necessário", "Instalar", s.install)
-        s.row(g, "Reiniciar", "Resolve a maioria dos problemas", "Reiniciar", S("restart", "Reiniciado"))
+        s.row(g, "Reiniciar", "Reinicia o serviço sem remover suas impressoras", "Reiniciar", S("restart", "Reiniciado"))
         s.row(g, "Iniciar", "", "Iniciar", S("start", "Iniciado"))
         s.row(g, "Parar", "", "Parar", S("stop", "Parado"))
         s.row(g, "Iniciar com o computador", "", "Ativar",

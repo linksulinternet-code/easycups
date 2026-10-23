@@ -1,70 +1,59 @@
-# EasyCUPS 1.1.0
+# EasyCUPS 1.2.0
 
-Site: https://easycups-linux.rareknoll1024.chatgpt.site
+**Site e instaladores:** https://easycups.vercel.app
 
-Uma interface em português para gerenciar impressoras no Linux. Evolução do projeto Cups Fácil fornecido pelo autor.
+Gerenciador de impressoras CUPS em português. A versão 1.2 simplifica a instalação: pacote `.deb`, instalador único `.run`, assistente gráfico e botão **Procurar minha impressora** no aplicativo.
 
-**Prévia experimental:** testes automatizados do núcleo não substituem testes em impressoras reais. Não é um driver universal.
+## Para o cliente
 
-## Recursos
+### Ubuntu 24.04+, Mint 22+ e Debian 13+
 
-- Descoberta USB/rede; cadastro IPP/IPPS com IPP Everywhere ou PPD para dispositivos legados.
-- Impressora padrão, pausar/retomar, página de teste e cancelamento de trabalhos.
-- Controle do serviço com detecção de systemd, OpenRC, runit e SysV.
-- Instalação de CUPS por apt-get, dnf, zypper, pacman, apk ou xbps-install, com autorização polkit.
-- Diagnóstico JSON sem GTK: `python3 -m easycups --doctor` (código 1 indica dependências/serviço ausentes).
-- Sem restauração destrutiva, sem instalação automática de drivers proprietários e sem compartilhamento por padrão.
+1. No site, escolha Ubuntu / Mint / Debian e baixe o `.deb`.
+2. Abra o arquivo no instalador de aplicativos da distribuição e clique em Instalar. A senha e o download das dependências podem ser solicitados.
+3. Abra EasyCUPS pelo menu e clique em **Procurar minha impressora**.
 
-## Instalar
+Algumas lojas não abrem pacotes locais. Nesse caso, o site oferece a alternativa `.run`, que prepara as dependências. Não use `dpkg -i` isoladamente: ele não resolve dependências automaticamente.
 
-Extraia o arquivo de download, abra um terminal na pasta e execute, como usuário comum:
+### Outras distribuições
 
-```sh
-python3 -m easycups --doctor
-python3 install.py
-~/.local/bin/easycups
-```
+Baixe `EasyCUPS-1.2.0.run` e, na pasta de download, execute `sh EasyCUPS-1.2.0.run`. O site também fornece uma linha pronta para copiar, baixar, verificar e iniciar.
 
-O instalador copia o aplicativo para `~/.local/share/easycups`, cria o comando em `~/.local/bin` e uma entrada no menu. Respeita XDG_DATA_HOME. Não instala dependências nem altera o serviço durante a instalação do aplicativo.
+O instalador detecta apt-get, dnf, zypper, pacman, apk ou xbps-install. Mostra o comando e pede confirmação antes de preparar dependências pelos repositórios da distro. Eleva somente o comando de pacotes por sudo, pkexec ou doas; nunca executa a interface como root. Em seguida abre o assistente **Instalar EasyCUPS → Abrir EasyCUPS**. Não adiciona repositórios de terceiros.
 
-## Dependências e distribuições
+O `.run` contém o aplicativo: não exige baixar e extrair o código manualmente. Verifica SHA-256 do conteúdo antes de extrair. Internet é necessária para dependências ausentes. O shell e as ferramentas básicas `tar`, `base64`, `sha256sum`, `awk` e `mktemp` devem existir.
 
-Python >= 3.9, PyGObject, GTK >= 4.10, libadwaita >= 1.5, comandos CUPS e pkexec com agente polkit na sessão. X11 ou Wayland. GNOME não é obrigatório.
+**Limites:** GTK >= 4.10, libadwaita >= 1.5, Python >= 3.9, PyGObject e CUPS. Não há compatibilidade garantida com qualquer distro ou impressora. Sistemas antigos podem não oferecer as bibliotecas; NixOS e sistemas ostree/imutáveis exigem procedimento específico. Comandos de pacotes preparados para seis famílias, ainda sem validação em todas elas.
 
-Exemplos de dependências (confira os nomes e versões no repositório da sua distro):
+## Usar
 
-| Família | Comando |
-|---|---|
-| Debian/Ubuntu/Mint | `sudo apt install python3 python3-gi gir1.2-gtk-4.0 gir1.2-adw-1 cups cups-client cups-filters pkexec` |
-| Fedora | `sudo dnf install python3 python3-gobject gtk4 libadwaita cups cups-client cups-filters polkit` |
-| Arch | `sudo pacman -S --needed python python-gobject gtk4 libadwaita cups cups-filters polkit` |
-| openSUSE | Instale Python, bindings GObject, GTK4, libadwaita, CUPS e polkit pelos repositórios locais. |
-| Alpine/Void | Mesmos requisitos, com OpenRC/runit; nomes dos pacotes variam. |
-| NixOS/imutáveis | Use configuração declarativa/camada própria da distribuição. A instalação interna de CUPS pode não se aplicar. |
+Ligue a impressora por USB ou conecte-a à mesma rede Wi-Fi. Abra EasyCUPS, clique em Procurar minha impressora e selecione o dispositivo. Para IPP Everywhere, escolha Automático. Modelos USB/legados podem exigir PPD ou Printer Application do fabricante. Se o CUPS estiver parado, abra Serviço e clique em Iniciar; o Linux poderá pedir senha.
 
-Ubuntu 22.04 e Debian 12 têm bibliotecas antigas na base e não atendem à GUI sem atualização das dependências. Nenhuma matriz de distros foi validada em VMs nesta versão. O tar.gz contém código Python independente de arquitetura, mas depende das bibliotecas do sistema. Não há Flatpak, AppImage ou RPM certificado nesta entrega.
-
-O modo automático requer uma impressora IPP Everywhere acessível por IPP/IPPS. Para USB/socket/LPD, escolha PPD compatível ou configure uma Printer Application. PPDs e drivers legados têm suporte variável conforme a versão do CUPS.
+A aplicação permite definir padrão, pausar/retomar, enviar página de teste, gerenciar trabalhos e consultar logs. Não apaga todas as impressoras para resolver falhas. Instalação do app preserva configurações existentes; os pacotes do sistema seguem os procedimentos normais do gerenciador da distro.
 
 ## Remover
 
-```sh
-python3 install.py --uninstall
-```
+- `.deb`: remova EasyCUPS pela loja/gerenciador de aplicativos.
+- `.run`: `python3 ~/.local/share/easycups/uninstall.py --uninstall` (ajuste o caminho se usar XDG_DATA_HOME).
+- Código: `python3 install.py --uninstall`.
 
-As impressoras, documentos e configurações CUPS são preservados.
+A desinstalação do aplicativo não remove CUPS, impressoras ou dependências compartilhadas. Evite misturar `.deb` e instalação por usuário; remova a anterior antes de trocar o método.
 
-## Desenvolvimento
+## Desenvolvimento e verificação
 
 ```sh
 python3 -m unittest discover -s tests -v
-python3 -m compileall -q easycups install.py
+python3 -m compileall -q easycups install.py packaging tests
+python3 packaging/build.py
+sh site/dist/downloads/EasyCUPS-1.2.0.run --check
+python3 -m easycups --doctor
 ```
 
-Não execute testes de impressão em máquinas de terceiros sem consentimento. Cancelar a fila inteira requer confirmação e autorização administrativa. Logs podem conter nomes de usuários/documentos: revise antes de compartilhar.
+`--doctor` não exige GTK e não altera o sistema. O `.run --check` também não instala pacotes nem inicia serviços. Testes de instalação usam diretórios temporários, incluindo caminhos com espaços, atualização, desinstalação, falha de cópia e rollback. O pacote Debian é inspecionado e extraído para validar sua estrutura; não significa instalação real certificada em toda a matriz.
 
-## Licença e origem
+O instalador e a GUI são testados no ambiente de desenvolvimento. Impressão física e testes em VMs de cada distribuição ainda estão pendentes.
 
-O arquivo original fornecido não continha licença. A autoria original é preservada em `NOTICE.md`; uma licença de software livre deve ser definida pelo titular antes de redistribuições por terceiros. Download público não equivale a concessão de licença.
+## Origem e licença
 
-Documentação técnica: [CUPS lpadmin](https://openprinting.github.io/cups/doc/man-lpadmin.html) e [PyGObject](https://pygobject.gnome.org/getting_started.html).
+Evolução do Cups Fácil fornecido pelo usuário. O arquivo original não incluía licença; consulte NOTICE.md. A licença de redistribuição deve ser definida pelo titular. Projeto independente, sem afiliação oficial com CUPS/OpenPrinting ou distribuições.
+
+Referências de requisitos e dependências: [PyGObject](https://pygobject.gnome.org/getting_started.html), [GTK em Ubuntu 24.04](https://packages.ubuntu.com/noble/gir1.2-gtk-4.0), [libadwaita em Ubuntu 24.04](https://packages.ubuntu.com/noble/gir1.2-adw-1), [CUPS lpadmin](https://openprinting.github.io/cups/doc/man-lpadmin.html).
