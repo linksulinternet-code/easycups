@@ -1,4 +1,4 @@
-# EasyCUPS 1.2.0
+# EasyCUPS 1.2.1
 
 **Site e instaladores:** https://easycups.vercel.app
 
@@ -16,7 +16,7 @@ Algumas lojas não abrem pacotes locais. Nesse caso, o site oferece a alternativ
 
 ### Outras distribuições
 
-Baixe `EasyCUPS-1.2.0.run` e, na pasta de download, execute `sh EasyCUPS-1.2.0.run`. O site também fornece uma linha pronta para copiar, baixar, verificar e iniciar.
+Baixe `EasyCUPS-1.2.1.run` e, na pasta de download, execute `sh EasyCUPS-1.2.1.run`. O site também fornece uma linha pronta para copiar, baixar, verificar e iniciar.
 
 O instalador detecta apt-get, dnf, zypper, pacman, apk ou xbps-install. Mostra o comando e pede confirmação antes de preparar dependências pelos repositórios da distro. Eleva somente o comando de pacotes por sudo, pkexec ou doas; nunca executa a interface como root. Em seguida abre o assistente **Instalar EasyCUPS → Abrir EasyCUPS**. Não adiciona repositórios de terceiros.
 
@@ -44,7 +44,7 @@ A desinstalação do aplicativo não remove CUPS, impressoras ou dependências c
 python3 -m unittest discover -s tests -v
 python3 -m compileall -q easycups install.py packaging tests
 python3 packaging/build.py
-sh site/dist/downloads/EasyCUPS-1.2.0.run --check
+sh site/dist/downloads/EasyCUPS-1.2.1.run --check
 python3 -m easycups --doctor
 ```
 
@@ -57,3 +57,8 @@ O instalador e a GUI são testados no ambiente de desenvolvimento. Impressão f�
 Evolução do Cups Fácil fornecido pelo usuário. O arquivo original não incluía licença; consulte NOTICE.md. A licença de redistribuição deve ser definida pelo titular. Projeto independente, sem afiliação oficial com CUPS/OpenPrinting ou distribuições.
 
 Referências de requisitos e dependências: [PyGObject](https://pygobject.gnome.org/getting_started.html), [GTK em Ubuntu 24.04](https://packages.ubuntu.com/noble/gir1.2-gtk-4.0), [libadwaita em Ubuntu 24.04](https://packages.ubuntu.com/noble/gir1.2-adw-1), [CUPS lpadmin](https://openprinting.github.io/cups/doc/man-lpadmin.html).
+
+
+## Atualizações automáticas — 26/10/2026
+
+[Funcionamento, ativação, testes, riscos e recuperação](docs/ATUALIZACOES.md). Política em updates/policy.json e Dependabot diário para dependências aplicáveis. Implementação em validação; a configuração só atua após integração na branch padrão e os canais de aplicativos exigem ativação descrita no guia. Não faz merge automático nem aprova dados operacionais.

@@ -3,7 +3,7 @@
 from pathlib import Path
 import base64, gzip, hashlib, io, json, os, shutil, subprocess, tarfile, tempfile
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 DIST = ROOT / 'site/dist/downloads'
 
 def payload():
@@ -42,7 +42,7 @@ Maintainer: EasyCUPS <linksulbak@gmail.com>
 Section: utils
 Priority: optional
 Homepage: https://easycups.vercel.app
-Depends: python3 (>= 3.9), python3-gi, gir1.2-gtk-4.0 (>= 4.10), gir1.2-adw-1 (>= 1.5), cups, cups-client, cups-filters, pkexec
+Depends: openssl, python3 (>= 3.9), python3-gi, gir1.2-gtk-4.0 (>= 4.10), gir1.2-adw-1 (>= 1.5), cups, cups-client, cups-filters, pkexec
 Description: Assistente de impressoras CUPS para Linux
  Interface em portugues para descobrir impressoras, configurar IPP,
  gerenciar filas e consultar o servico de impressao.

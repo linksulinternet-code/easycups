@@ -17,7 +17,7 @@ class BootstrapTests(unittest.TestCase):
             script(manager, 'exit 0')
             script('python3', 'if [ "$1" = -c ]; then exit "$READY_STATUS"; fi\nprintf "GUI:%s:%s\\n" "$PWD" "$*" >> "$CALL_LOG"')
             script('sudo', 'printf "PRIV:%s\\n" "$*" >> "$CALL_LOG"; exit "$SUDO_STATUS"')
-            for cmd in ['lpstat', 'lpadmin', 'lpinfo', 'lp', 'cancel', 'pkexec']: script(cmd, 'exit 0')
+            for cmd in ['openssl', 'lpstat', 'lpadmin', 'lpinfo', 'lp', 'cancel', 'pkexec']: script(cmd, 'exit 0')
             env = {**os.environ, 'PATH':str(tools), 'READY_STATUS':'0' if ready else '1', 'SUDO_STATUS':str(sudo_status), 'CALL_LOG':str(log), 'EASYCUPS_CHECK_ONLY':'1' if check else '0'}
             result = subprocess.run(['/bin/sh',str(ROOT/'packaging/bootstrap.sh')], input=answer,text=True,capture_output=True,env=env)
             return result, log.read_text() if log.exists() else ''
