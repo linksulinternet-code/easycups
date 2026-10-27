@@ -136,7 +136,7 @@ class Updates(unittest.TestCase):
             package=self.root/'bundled';package.mkdir()
             config=dict(self.config,bundled_version='1.0.0')
             (package/'update-channel.json').write_text(json.dumps(config))
-            for body, expected in ((b'import sys;assert len(sys.argv)==1;print("UPDATED_CHILD")','UPDATED_CHILD'),(b'raise RuntimeError("synthetic failure")','BUNDLED_FALLBACK')):
+            for body, expected in ((b'import sys;assert len(sys.argv)==1;print("UPDATED_CHILD")','UPDATED_CHILD'),(b'raise RuntimeError("synthetic failure")','BUNDLED_FALLBACK'),(b'import os,signal;os.kill(os.getpid(),signal.SIGTERM)','BUNDLED_FALLBACK')):
                 blob=self.archive([('sampleapp/__init__.py',b''),('sampleapp/__main__.py',body)])
                 signed=self.signed(blob,version='2.0.0' if expected=='UPDATED_CHILD' else '3.0.0')
                 u.stage(self.config,'1.0.0',self.fetch(blob,signed))

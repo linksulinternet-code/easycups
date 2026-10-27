@@ -153,9 +153,13 @@ class Win(Adw.ApplicationWindow):
         pg.add(s.dg); return pg
 
     def scan(s):
-        s.toast("Procurando…"); bg(lambda: run(["lpinfo", "-v"], timeout=60)[1], s.found)
+        s.toast("Procurando…"); bg(lambda: run(["lpinfo", "-v"], timeout=60), s.found)
 
-    def found(s, o):
+    def found(s, result):
+        ok, o = result
+        if not ok:
+            s.fail("Não foi possível procurar impressoras.\n" + o)
+            return
         for x in s.drow: s.dg.remove(x)
         s.drow = []; seen = set()
         for ln in o.splitlines():
@@ -193,11 +197,16 @@ class Win(Adw.ApplicationWindow):
               lambda: s.confirm("Cancelar todos os trabalhos?", "Os trabalhos pendentes de todas as impressoras serão cancelados.", "Cancelar trabalhos", lambda: s.do(["cancel", "-a"], "Fila limpa", s.queue)), True)
         pg.add(g); s.queue(); return pg
 
-    def queue(s): bg(lambda: run(["lpstat", "-o"])[1], s.qfill)
+    def queue(s): bg(lambda: run(["lpstat", "-o"]), s.qfill)
 
-    def qfill(s, o):
+    def qfill(s, result):
+        ok, o = result
         for x in s.qrow: s.qg.remove(x)
         s.qrow = []
+        if not ok:
+            row = Adw.ActionRow(title="Não foi possível consultar a fila", subtitle=o[-300:])
+            s.qg.add(row); s.qrow.append(row)
+            return
         for ln in o.splitlines():
             p = ln.split()
             if not p or not re.match(r".+-\d+$", p[0]): continue

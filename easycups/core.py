@@ -9,7 +9,7 @@ def run(cmd, admin=False, timeout=300):
     if admin: cmd = ["pkexec"] + cmd
     try:
         p = subprocess.run(HOST + cmd, capture_output=True, text=True, timeout=timeout)   # FM13
-    except subprocess.TimeoutExpired: return False, "Tempo esgotado. Tente novamente."
+    except subprocess.TimeoutExpired: return False, "Tempo esgotado. O resultado da operação não foi confirmado. Consulte a fila ou o estado do serviço antes de repetir."
     except FileNotFoundError as e: return False, "Programa não encontrado: %s" % e.filename
     except Exception as e: return False, str(e)
     out = (p.stdout + p.stderr).strip()

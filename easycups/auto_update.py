@@ -225,7 +225,7 @@ def bootstrap(package):
                     result = subprocess.run([sys.executable, '-I', '-c',
                         'import sys,runpy;root,app=sys.argv[1:];sys.argv=[app];sys.path.insert(0,root);runpy.run_module(app,run_name="__main__",alter_sys=True)',
                         tmp, config['app']], env=env)
-                    if result.returncode > 0:
+                    if result.returncode != 0:
                         atomic_json(root/'failed.json', {'sha256':data['sha256']})
                         (root/'active.json').unlink(missing_ok=True)
                         return  # Launch the bundled application after a failed update.

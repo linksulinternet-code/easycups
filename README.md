@@ -62,3 +62,12 @@ Referências de requisitos e dependências: [PyGObject](https://pygobject.gnome.
 ## Atualizações automáticas — 26/10/2026
 
 [Funcionamento, ativação, testes, riscos e recuperação](docs/ATUALIZACOES.md). Política em updates/policy.json e Dependabot diário para dependências aplicáveis. Implementação em validação; a configuração só atua após integração na branch padrão e os canais de aplicativos exigem ativação descrita no guia. Não faz merge automático nem aprova dados operacionais.
+
+
+## Revisão de regressões — 27/10/2026
+
+Falhas de descoberta/fila aparecem como erro, preservando a diferença entre indisponibilidade e lista vazia. Timeout não recomenda repetir uma operação sem consultar seu resultado. Atualizador trata término por sinal como falha.
+
+36 testes existentes e 2 novos testes dos callbacks reais aprovados com widgets simulados; sem comandos de impressora nesses testes. Faltam ensaio GTK e impressora real.
+
+Critérios de aceite, limites e recuperação: [docs/REGRESSOES.md](docs/REGRESSOES.md). Referência de padrão: proposta v0.1.1 em linksul-metodologia-software#4, ainda em revisão.
