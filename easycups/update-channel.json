@@ -1,0 +1,7 @@
+{
+  "app": "easycups",
+  "bundled_version": "1.2.1",
+  "feed": "https://easycups.vercel.app/updates/easycups/latest.json",
+  "enabled": true,
+  "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA/DTaS2jOg+mofsaRzKj4LMRO9ILvRFGYJebe86I+Hrg=\n-----END PUBLIC KEY-----\n"
+}

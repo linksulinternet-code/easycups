@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "repository": "linksulinternet-code/easycups",
+  "kind": "desktop",
+  "dependency_updates": "pull_request",
+  "automatic_dependency_merge": false,
+  "preserve_user_data": true,
+  "production_requires_validated_release": true,
+  "automatic_data_approval": false,
+  "app": "easycups",
+  "required_workflows": [
+    "Update safety"
+  ]
+}

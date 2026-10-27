@@ -9,7 +9,7 @@ fi
 check_environment() {
     command -v python3 >/dev/null 2>&1 || return 1
     python3 -c 'import sys; assert sys.version_info >= (3,9); import gi; gi.require_version("Gtk","4.0"); gi.require_version("Adw","1"); from gi.repository import Gtk,Adw; assert (Gtk.get_major_version(),Gtk.get_minor_version()) >= (4,10); assert (Adw.get_major_version(),Adw.get_minor_version()) >= (1,5)' >/dev/null 2>&1 || return 1
-    for tool in lpstat lpadmin lpinfo lp cancel pkexec; do command -v "$tool" >/dev/null 2>&1 || return 1; done
+    for tool in openssl lpstat lpadmin lpinfo lp cancel pkexec; do command -v "$tool" >/dev/null 2>&1 || return 1; done
 }
 manager=''
 # Imutáveis devem usar seus mecanismos próprios; não tentar apt/dnf internos.
@@ -19,22 +19,22 @@ if [ -e /run/ostree-booted ] || [ -e /etc/NIXOS ]; then
 fi
 if command -v apt-get >/dev/null 2>&1; then
     manager=apt-get
-    set -- apt-get install -y python3 python3-gi 'gir1.2-gtk-4.0' 'gir1.2-adw-1' cups cups-client cups-filters pkexec
+    set -- apt-get install -y openssl python3 python3-gi 'gir1.2-gtk-4.0' 'gir1.2-adw-1' cups cups-client cups-filters pkexec
 elif command -v dnf >/dev/null 2>&1; then
     manager=dnf
-    set -- dnf install -y python3 python3-gobject gtk4 libadwaita cups cups-client cups-filters polkit
+    set -- dnf install -y openssl python3 python3-gobject gtk4 libadwaita cups cups-client cups-filters polkit
 elif command -v zypper >/dev/null 2>&1; then
     manager=zypper
-    set -- zypper --non-interactive install python3 python3-gobject python3-gobject-Gdk typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 cups cups-client cups-filters polkit
+    set -- zypper --non-interactive install openssl python3 python3-gobject python3-gobject-Gdk typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 cups cups-client cups-filters polkit
 elif command -v pacman >/dev/null 2>&1; then
     manager=pacman
-    set -- pacman -S --needed python python-gobject gtk4 libadwaita cups cups-filters polkit
+    set -- pacman -S --needed openssl python python-gobject gtk4 libadwaita cups cups-filters polkit
 elif command -v apk >/dev/null 2>&1; then
     manager=apk
-    set -- apk add python3 py3-gobject3 gtk4.0 libadwaita cups cups-client cups-filters polkit
+    set -- apk add openssl python3 py3-gobject3 gtk4.0 libadwaita cups cups-client cups-filters polkit
 elif command -v xbps-install >/dev/null 2>&1; then
     manager=xbps-install
-    set -- xbps-install -S python3 python3-gobject gtk4 libadwaita cups cups-filters polkit
+    set -- xbps-install -S openssl python3 python3-gobject gtk4 libadwaita cups cups-filters polkit
 fi
 if [ "${EASYCUPS_CHECK_ONLY:-0}" = 1 ]; then
     echo "Gerenciador: ${manager:-não reconhecido}"

@@ -1,3 +1,9 @@
+# Apply only verified per-user updates before importing application modules.
+if __name__ == "__main__":
+    from pathlib import Path as _UpdatePath
+    from .auto_update import bootstrap as _bootstrap_update
+    _bootstrap_update(_UpdatePath(__file__).parent)
+
 import argparse, json, shutil, sys
 from . import __version__
 from .core import run

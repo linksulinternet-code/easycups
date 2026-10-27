@@ -1,0 +1,37 @@
+name: Signed application update
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  signed-channel:
+    if: github.event_name == 'workflow_dispatch' || !github.event.release.prerelease
+    runs-on: ubuntu-24.04
+    environment: updates-production
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Validate signed updater
+        run: python3 -m unittest discover -s tests -p test_auto_update.py -v
+      - name: Prepare signed release
+        env:
+          LINKSUL_UPDATE_SIGNING_KEY: ${{ secrets.LINKSUL_UPDATE_SIGNING_KEY }}
+        run: python3 tools/build_update.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: signed-update-${{ github.sha }}
+          path: dist/updates/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish only after required CI and domain checks
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        run: python3 tools/publish_update.py

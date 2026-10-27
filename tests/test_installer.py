@@ -23,9 +23,9 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue(launcher.is_file())
         desktop = installer.paths()[2].read_text()
         self.assertIn('Exec="', desktop)
-        self.assertEqual(subprocess.check_output([str(launcher),'--version'],text=True).strip(), '1.2.0')
+        self.assertEqual(subprocess.check_output([str(launcher),'--version'],text=True).strip(), '1.2.1')
         installer.install_files()
-        self.assertEqual(subprocess.check_output([str(launcher),'--version'],text=True).strip(), '1.2.0')
+        self.assertEqual(subprocess.check_output([str(launcher),'--version'],text=True).strip(), '1.2.1')
         uninstall = installer.paths()[0]/'uninstall.py'
         subprocess.run([sys.executable, str(uninstall), '--uninstall'], check=True, capture_output=True)
         self.assertFalse(launcher.exists())
